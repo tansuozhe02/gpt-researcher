@@ -1,11 +1,13 @@
 from langchain.vectorstores import FAISS
-from langchain.embeddings import OpenAIEmbeddings
+from xinference.client import Client
+
 
 
 class Memory:
     def __init__(self, **kwargs):
-        self._embeddings = OpenAIEmbeddings()
+        self._client = Client("http://localhost:9997")
+        self._model = self._client.get_model("MODEL_UID")
 
-    def get_embeddings(self):
-        return self._embeddings
+    def create_embedding(self, text):
+        return self._model.create_embedding(text)
 

@@ -5,6 +5,7 @@ from fastapi import WebSocket
 from langchain.adapters import openai as lc_openai
 from colorama import Fore, Style
 from typing import Optional
+import openai
 
 from gpt_researcher.master.prompts import auto_agent_instructions
 
@@ -55,12 +56,13 @@ async def send_chat_completion_request(
         messages, model, temperature, max_tokens, stream, llm_provider, websocket
 ):
     if not stream:
-        result = lc_openai.ChatCompletion.create(
+        client = openai.Client(api_key="empty", base_url=f"http://0.0.0.0:9997/v1")
+        result = client.chat.completions.create(
             model=model,  # Change model here to use different models
             messages=messages,
             temperature=temperature,
             max_tokens=max_tokens,
-            provider=llm_provider,  # Change provider here to use a different API
+            provider=llm_provider,
         )
         return result["choices"][0]["message"]["content"]
     else:
@@ -70,8 +72,8 @@ async def send_chat_completion_request(
 async def stream_response(model, messages, temperature, max_tokens, llm_provider, websocket=None):
     paragraph = ""
     response = ""
-
-    for chunk in lc_openai.ChatCompletion.create(
+    client = openai.Client(api_key="empty", base_url=f"http://0.0.0.0:9997/v1")
+    for chunk in client.chat.completions.create(
             model=model,
             messages=messages,
             temperature=temperature,
