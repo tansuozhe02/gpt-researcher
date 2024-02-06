@@ -63,7 +63,8 @@ async def send_chat_completion_request(
             temperature=temperature,
             max_tokens=max_tokens,
         )
-        return result["choices"][0]["message"]["content"]
+        message_content = result.choices[0].message.content
+        return message_content
     else:
         return await stream_response(model, messages, temperature, max_tokens, llm_provider, websocket)
 
@@ -79,7 +80,7 @@ async def stream_response(model, messages, temperature, max_tokens, llm_provider
             max_tokens=max_tokens,
             stream=True,
     ):
-        content = chunk["choices"][0].get("delta", {}).get("content")
+        content = hunk["choices"][0].message.content
         if content is not None:
             response += content
             paragraph += content
