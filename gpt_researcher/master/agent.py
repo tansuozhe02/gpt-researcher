@@ -130,7 +130,12 @@ class GPTResearcher:
     async def get_similar_content_by_query(self, query, pages):
         await stream_output("logs", f"📃 Getting relevant content based on query: {query}...", self.websocket)
         # Summarize Raw Data
-        context_compressor = ContextCompressor(documents=pages, embeddings=self.memory.get_embeddings())
+        embeddings = []
+        for page in pages:
+            text = page.get('text', '')  # Safely get 'text' from page, defaulting to empty string if not found
+            embedding = self.memory.get_embeddings(text)
+            embeddings.append(embedding)
+        context_compressor = ContextCompressor(documents=pages, embeddings=embeddings)
         # Run Tasks
         return context_compressor.get_context(query, max_results=8)
 
