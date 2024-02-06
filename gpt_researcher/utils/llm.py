@@ -80,7 +80,7 @@ async def stream_response(model, messages, temperature, max_tokens, llm_provider
             max_tokens=max_tokens,
             stream=True,
     ):
-        content = hunk["choices"][0].message.content
+        content = chunk["choices"][0].message.content
         if content is not None:
             response += content
             paragraph += content
