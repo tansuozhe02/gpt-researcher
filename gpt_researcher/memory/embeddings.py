@@ -7,7 +7,7 @@ class Memory:
     def __init__(self, **kwargs):
         pass
 
-    def get_embedding(self):
+    def get_embeddings(self):
         embeddings = XinferenceEmbeddings(server_url=xinference_server_url, model_uid="mistral-instruct-v0.1")
         return embeddings
 
