@@ -1,13 +1,12 @@
 from langchain.vectorstores import FAISS
-from langchain_community.embeddings import XinferenceEmbeddings
+import openai
 
-xinference_server_url = "http://127.0.0.1:9997"
 
 class Memory:
     def __init__(self, **kwargs):
-        pass
+        self._client = openai.Client(api_key="not empty", base_url="http://127.0.0.1:9997/v1")
 
-    def get_embeddings(self):
-        embeddings = XinferenceEmbeddings(server_url=xinference_server_url, model_uid="mistral-instruct-v0.1")
+    def get_embeddings(self, text):
+        embeddings = client.embeddings.create(model='mistral-instruct-v0.1', input=[text])
         return embeddings
 
